@@ -1,6 +1,8 @@
 // system include files
 #include <memory>
 #include <vector>
+#include <algorithm>
+#include <iostream>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -37,6 +39,30 @@ std::string int_to_string(const int a){
   ss << a;
   std::string str = ss.str();
   return str;
+}
+
+std::vector<std::float> parse2(std::istream& in)
+{
+    std::vector<std::float> output;
+    std::float num;
+    while( in ) {
+        std::cin >> num;  // throwaway 1
+        std::cin >> num;  // data2
+        output.push_back(num);
+    }
+    return output;
+}
+
+std::vector<std::int> parse1(std::istream& in)
+{
+    std::vector<std::int> output;
+    std::int num;
+    while( in ) {
+        std::cin >> num;  // throwaway 1
+        output.push_back(num);
+        std::cin >> num;  // data2
+    }
+    return output;
 }
 
 class GenAnalyzer : public edm::EDAnalyzer {
@@ -155,6 +181,7 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	using namespace std;
 	using namespace edm;
 	using namespace reco;
+	using namespace boost;
 
 //	bool isMC = false;
 	//bool isMC = true;
@@ -166,11 +193,48 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  iEvent.getByLabel( src2_ , particles );
 	  p = *particles;
 	  }*/
+	 
+	
 
 	// Way to call CALOJETS
 	edm::Handle<std::vector<reco::CaloJet>> jets;
 	iEvent.getByLabel( src_ , jets );
 	const std::vector<reco::CaloJet> & jet = *jets;
+	
+	//this section filters out runs with luminosities over the cutoff 
+	  
+	parse(std::cin);
+	std::ifstream file("scoutinglumi.tsv");
+	
+	std::vector<std::int> runs;
+	std::vector<std::float> runlumi;
+	
+	runs = parse1(file);
+	runlumi = parse2(file);
+	
+	//get the run number
+	runNumber = iEvent.id().run();
+	
+	// Set the cuttoff Luminosity for the run
+	int lumiCutoff;
+	lumiCutoff = 100000;
+	
+	//find the interator corresponding to the run number
+	int runtag;
+	runtag = find(runs.begin(),runs.end(), runNumber);
+	
+	float luminosity;
+	luminosity = runlumi.at(runtag);
+	
+	if(luminosity>lumiCutoff)
+	{
+		return;
+	}
+	
+	
+	//end filter
+	
+	
 
 	// Way to cal PFJETS
 //	edm::Handle<std::vector<reco::PFJet>> jets;

@@ -41,6 +41,7 @@ std::string int_to_string(const int a){
   return str;
 }
 
+//parse an input of two rows and return a vector comprised of the second row
 std::vector<std::float> parse2(std::istream& in)
 {
     std::vector<std::float> output;
@@ -52,6 +53,7 @@ std::vector<std::float> parse2(std::istream& in)
     }
     return output;
 }
+//parse an input of two rows and return a vector comprised of the first row
 
 std::vector<std::int> parse1(std::istream& in)
 {

@@ -1,0 +1,2 @@
+# GenAnalyzer
+Scouting data analyzer

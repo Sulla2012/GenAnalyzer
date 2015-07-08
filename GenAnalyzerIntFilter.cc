@@ -190,7 +190,7 @@ int buffer [] = {193834, 193835, 193836, 193878, 193898, 193904, 193905, 193917,
 	lumiCutoff = 50000000;
 	
 	//find the interator corresponding to the run number
-	int runtag;
+	unsigned int runtag = 0;
   	for(unsigned int i = 0; i < runs.size(); ++i){
   		if(runNumber==runs[i])
   		{

@@ -177,12 +177,13 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
 	
 	//get the run number. This is some magic function defined in one of the libraries we're using, set to some number to run
+	int runNumber;
 	runNumber = iEvent.id().run();
 
 	
 	for(unsigned int i = 0; i < badRuns.size(); ++i){
 		if(runNumber == badRuns[i]){
-			return 0;
+			return;
 		}
 	}
 	// Way to call CALOJETS

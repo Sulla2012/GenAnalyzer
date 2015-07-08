@@ -181,6 +181,7 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
 	
 	//get the run number. This is some magic function defined in one of the libraries we're using, set to some number to run
+	int runNumber;
 	runNumber = iEvent.id().run();
 
 	
@@ -203,7 +204,7 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	
 	if(luminosity>lumiCutoff)
 	{
-		return 0;
+		return;
 	}
 
 

@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
+#include <array>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -39,32 +41,6 @@ std::string int_to_string(const int a){
   ss << a;
   std::string str = ss.str();
   return str;
-}
-
-//parse an input of two rows and return a vector comprised of the second row
-std::vector<std::float> parse2(std::istream& in)
-{
-    std::vector<std::float> output;
-    std::float num;
-    while( in ) {
-        std::cin >> num;  // throwaway 1
-        std::cin >> num;  // data2
-        output.push_back(num);
-    }
-    return output;
-}
-//parse an input of two rows and return a vector comprised of the first row
-
-std::vector<std::int> parse1(std::istream& in)
-{
-    std::vector<std::int> output;
-    std::int num;
-    while( in ) {
-        std::cin >> num;  // throwaway 1
-        output.push_back(num);
-        std::cin >> num;  // data2
-    }
-    return output;
 }
 
 class GenAnalyzer : public edm::EDAnalyzer {
@@ -183,7 +159,6 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	using namespace std;
 	using namespace edm;
 	using namespace reco;
-	using namespace boost;
 
 //	bool isMC = false;
 	//bool isMC = true;
@@ -195,48 +170,25 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 	  iEvent.getByLabel( src2_ , particles );
 	  p = *particles;
 	  }*/
-	 
-	
 
+
+	int buffer [] = {194050, 194076, 194108, 194115, 194424, 194429, 194480, 194533, 194789, 194912, 195013, 195113, 195147, 195304, 195378, 195397, 195398, 195530, 195552, 195774, 195915, 195948, 195950, 196197, 196199, 196218, 196239, 196250, 196364, 196431, 196438, 196452, 196453, 198230, 198271, 198487, 198955, 198969, 199008, 199021, 199319, 199336, 199409, 199428, 199435, 199608, 199699, 199754, 199804, 199812, 199833, 199864, 199877, 200041, 200075, 200091, 200190, 200229, 200244, 200369, 200473, 200519, 200525, 200600, 200786, 200991, 201097, 201168, 201191, 201278, 201602, 201613, 201625, 201671, 201707, 202016, 202044, 202045, 202060, 202075, 202087, 202178, 202237, 202272, 202299, 202328, 202478, 202504, 202972, 202973, 203002, 203894, 203912, 203987, 204113, 204250, 204506, 204563, 204564, 204577, 204601, 205111, 205158, 205193, 205238, 205310, 205311, 205344, 205666, 205667, 205694, 205718, 205781, 205826, 205921, 206187, 206207, 206243, 206246, 206401, 206446, 206448, 206466, 206484, 206512, 206542, 206596, 206744, 206745, 206859, 206869, 206940, 207099, 207214, 207231, 207269, 207273, 207279, 207372, 207454, 207477, 207487, 207515, 207889, 207905, 207920, 208307, 208341, 208391, 208427, 208429, 208487, 208551, 208686};
+	std::vector<int> badRuns (buffer, buffer + sizeof(buffer) / sizeof(int) );
+
+	
+	//get the run number. This is some magic function defined in one of the libraries we're using, set to some number to run
+	runNumber = iEvent.id().run();
+
+	
+	for(unsigned int i = 0; i < badRuns.size(); ++i){
+		if(runNumber == badRuns[i]){
+			return 0;
+		}
+	}
 	// Way to call CALOJETS
 	edm::Handle<std::vector<reco::CaloJet>> jets;
 	iEvent.getByLabel( src_ , jets );
 	const std::vector<reco::CaloJet> & jet = *jets;
-	
-	//this section filters out runs with luminosities over the cutoff 
-	  
-	parse(std::cin);
-	std::ifstream file("scoutinglumi.tsv");
-	
-	std::vector<std::int> runs;
-	std::vector<std::float> runlumi;
-	
-	runs = parse1(file);
-	runlumi = parse2(file);
-	
-	//get the run number
-	runNumber = iEvent.id().run();
-	
-	// Set the cuttoff Luminosity for the run
-	int lumiCutoff;
-	lumiCutoff = 100000;
-	
-	//find the interator corresponding to the run number
-	int runtag;
-	runtag = find(runs.begin(),runs.end(), runNumber);
-	
-	float luminosity;
-	luminosity = runlumi.at(runtag);
-	
-	if(luminosity>lumiCutoff)
-	{
-		return;
-	}
-	
-	
-	//end filter
-	
-	
 
 	// Way to cal PFJETS
 //	edm::Handle<std::vector<reco::PFJet>> jets;

@@ -83,7 +83,7 @@ bestGood = max(listGoodness)
 bufferString = str(bestGood)
 print("Best goodness = " +bufferString)
 
-bufferList = ["Very Soft", "Soft", "Hard"
+bufferList = ["Very Soft", "Soft", "Hard"]
 
 for cut in bufferList:
         

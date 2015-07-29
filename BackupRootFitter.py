@@ -49,11 +49,11 @@ top.SetParameter(5,1000)
 top.SetParameter(6,100)
 top.SetParameter(7,10)
 
-top.FixParameter(0,a)
-top.FixParameter(1,b)
-top.FixParameter(2,c)
-top.FixParameter(3,d)
-top.FixParameter(4,e)
+top.Setarameter(0,a)
+top.SetParameter(1,b)
+top.SetParameter(2,c)
+top.SetParameter(3,d)
+top.SetParameter(4,e)
 
 hist.Fit("top", "R")
 
